@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
 import Overlay from './Overlay';
 import './App.css';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 const domRectToStyle = (rect) => {
   return ({
@@ -54,8 +53,11 @@ class App extends Component {
   
     this.state = {
       isFeedBackBoxOpen: false,
-      hoverElementStyle: null
+      selectionMode: false,
+      startMousePosition: null,
+      endMousePosition: null,
     }
+    this.selection = false
   }
 
   handleLauncherClick = () => {
@@ -68,20 +70,41 @@ class App extends Component {
   }
 
   activateInspector = () => {
-    document.addEventListener("mousemove", this.mouseMove, false);
+    document.addEventListener("click", this.handleClick, false);
+    // document.addEventListener("mousemove", this.mouseMove, false);
   }
 
   deactivateInspector = () => {
-    document.removeEventListener("mousemove", this.mouseMove, false);
+    // document.removeEventListener("mousemove", this.mouseMove, false);
+  }
+
+  handleClick = (e) => {
+    console.log(e)
+    const x = e.clientX
+    const y = e.clientY
+    if(this.selection) {
+      document.removeEventListener("mousemove", this.mouseMove, false);
+      this.setState({endMousePosition: {x, y}, selectionMode: false})
+      console.log(this.state.startMousePosition)
+      console.log(this.state.endMousePosition)
+      this.selection = false
+    } else {
+      this.setState({startMousePosition: {x, y}, endMousePosition: {x, y}, selectionMode: true})
+      document.addEventListener("mousemove", this.mouseMove, false);
+      this.selection = true
+    }
   }
 
   mouseMove = (e) => {
-    const hoverElement = e.target
-    console.log(hoverElement)
-    const hoverElementLayout = hoverElement.getBoundingClientRect()
-    if(hoverElement.id !== "highlighter") {
-      this.setState({hoverElementStyle: domRectToStyle(hoverElementLayout)})
-    }
+    const x = e.clientX
+    const y = e.clientY
+    console.log(e.clientX, e.clientY)
+    this.setState({endMousePosition: {x, y}})
+    // const hoverElement = e.target
+    // const hoverElementLayout = hoverElement.getBoundingClientRect()
+    // if(hoverElement.id !== "highlighter") {
+    //   this.setState({hoverElementStyle: domRectToStyle(hoverElementLayout)})
+    // }
   }
 
   closeFeedBackBox = () => {
@@ -89,9 +112,16 @@ class App extends Component {
   }
   
   render() {
-    const {isFeedBackBoxOpen, hoverElementStyle} = this.state
-    const overlay = hoverElementStyle && <Overlay><HighlightBorder style={hoverElementStyle}/></Overlay>
-    // console.log(hoverElementStyle)
+    const {isFeedBackBoxOpen, selectionMode, startMousePosition, endMousePosition} = this.state
+    const style = selectionMode ? {
+      x1: startMousePosition.x,
+      y1: startMousePosition.y,
+      x2: endMousePosition.x,
+      y2: endMousePosition.y
+    } : {}
+
+    const overlay = selectionMode && <Overlay style={style}/>
+
     return (
       <Fragment>
         {overlay}
