@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import styled from "styled-components";
-
-const Canvas = styled.canvas`
-  position: absolute;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-`;
+import { Canvas } from "./Styled";
 
 export default class Overlay extends Component {
   constructor(props) {
@@ -31,7 +24,7 @@ export default class Overlay extends Component {
     const canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+    ctx.fillStyle = "rgba(102, 102, 102, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   };
 

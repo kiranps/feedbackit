@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from "react";
 import Close from "./Close";
 import Canvas from "./Canvas";
-import { BugFrontLauncher, Select, Hide, Done } from "./Styled";
+import { BugFrontLauncher, Done } from "./Styled";
 import { domRectToStyle, isInside } from "./helper";
+import { Drag, Select, Hide } from "./Icons";
 import "./App.css";
 
 class App extends Component {
@@ -90,7 +91,6 @@ class App extends Component {
 
   render() {
     const { hoverElementStyle, selections, activeBoxes } = this.state;
-    console.log(selections);
 
     return (
       <Fragment>
@@ -105,6 +105,7 @@ class App extends Component {
         <Canvas selections={selections} hoveredNode={hoverElementStyle} />
         {
           <BugFrontLauncher>
+            <Drag />
             <Select onClick={() => this.handleSelect("select")} />
             <Hide onClick={() => this.handleSelect("draw")} />
             <Done onClick={() => this.handleSelect("done")} />
