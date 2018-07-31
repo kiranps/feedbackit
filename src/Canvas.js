@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 
 const Canvas = styled.canvas`
@@ -8,7 +8,7 @@ const Canvas = styled.canvas`
   top: 0;
 `;
 
-export default class Overlay extends PureComponent {
+export default class Overlay extends Component {
   constructor(props) {
     super(props);
     const windowHeight = window.innerHeight;
@@ -19,7 +19,7 @@ export default class Overlay extends PureComponent {
     this.width = windowWidth > documentWidth ? windowWidth : documentWidth;
     this.canvasRef = React.createRef();
     this.state = {
-      selections: []
+      activeRect: null
     };
   }
 
@@ -37,6 +37,10 @@ export default class Overlay extends PureComponent {
 
   componentDidUpdate = () => {
     this.clearCanvas();
+    if (this.props.hoveredNode) {
+      this.drawRect(this.props.hoveredNode);
+    }
+
     this.props.selections.forEach(x => {
       this.drawRect(x);
     });
@@ -46,6 +50,7 @@ export default class Overlay extends PureComponent {
     const { x, y, width, height } = rect;
     const canvas = this.canvasRef.current;
     const ctx = canvas.getContext("2d");
+    ctx.beginPath();
     ctx.lineWidth = "2";
     ctx.rect(x, y, width, height);
     ctx.strokeStyle = "yellow";

@@ -3,8 +3,15 @@ import styled from "styled-components";
 import DrawTool from "./Draw";
 import Overlay from "./Overlay";
 import SelectTool from "./Select";
+import Close from "./Close";
 import Canvas from "./Canvas";
 import "./App.css";
+
+const isInside = (rect, mouse) => {
+  const { top, right, bottom, left } = rect;
+  const { x, y } = mouse;
+  return x > left && x < right + 12 && y > top - 12 && y < bottom;
+};
 
 const domRectToStyle = rect => {
   return {
@@ -78,7 +85,8 @@ class App extends Component {
       selectionMode: false,
       startMousePosition: null,
       endMousePosition: null,
-      selections: []
+      selections: [],
+      activeBoxes: []
     };
     this.selection = false;
   }
@@ -133,11 +141,13 @@ class App extends Component {
   };
 
   handleSelectionMode = () => {
-    console.log("hello");
     const { hoverElementStyle } = this.state;
     if (hoverElementStyle) {
       this.setState({
-        selections: [...this.state.selections, hoverElementStyle],
+        selections: [
+          ...this.state.selections,
+          { key: this.state.selections.length, ...hoverElementStyle }
+        ],
         hoverElementStyle: null
       });
     }
@@ -146,17 +156,27 @@ class App extends Component {
   mouseMove = e => {
     const x = e.clientX;
     const y = e.clientY;
+    const activeBoxes =
+      this.state.selections.filter(box => isInside(box, { x, y })) || [];
     this.setState({ endMousePosition: { x, y } });
     const hoverElement = e.target;
     const hoverElementLayout = hoverElement.getBoundingClientRect();
-    const hoverElementStyle = !["HTML", "BODY"].includes(hoverElement.tagName)
+    const hoverElementStyle = !["HTML", "BODY", "svg", "path"].includes(
+      hoverElement.tagName
+    )
       ? domRectToStyle(hoverElementLayout)
       : null;
-    this.setState({ hoverElementStyle });
+    this.setState({ hoverElementStyle, activeBoxes });
   };
 
   closeFeedBackBox = () => {
     this.deactivateInspector();
+  };
+
+  handleDelete = key => {
+    this.setState({
+      selections: this.state.selections.filter(x => x.key !== key)
+    });
   };
 
   render() {
@@ -166,30 +186,39 @@ class App extends Component {
       startMousePosition,
       endMousePosition,
       hoverElementStyle,
-      selections
+      selections,
+      activeBoxes
     } = this.state;
     console.log(selections);
-    const style = selectionMode
-      ? {
-          x1: startMousePosition.x,
-          y1: startMousePosition.y,
-          x2: endMousePosition.x,
-          y2: endMousePosition.y
-        }
-      : {};
+    // const style = selectionMode
+    //   ? {
+    //       x1: startMousePosition.x,
+    //       y1: startMousePosition.y,
+    //       x2: endMousePosition.x,
+    //       y2: endMousePosition.y
+    //     }
+    //   : {};
 
-    const overlay = selectionMode && <DrawTool style={style} />;
+    // // const overlay = selectionMode && <DrawTool style={style} />;
 
-    const select = hoverElementStyle && (
-      <SelectTool style={hoverElementStyle} />
-    );
+    // const select = hoverElementStyle && (
+    //   <SelectTool style={hoverElementStyle} />
+    // );
 
     return (
       <Fragment>
         {/* <Overlay selections={selections} /> */}
-        <Canvas selections={selections} />
+        {activeBoxes.map((x, i) => (
+          <Close
+            key={i}
+            top={x.top - 12}
+            left={x.left + x.width - 12}
+            onClick={() => this.handleDelete(x.key)}
+          />
+        ))}
+        <Canvas selections={selections} hoveredNode={hoverElementStyle} />
         {/* {overlay} */}
-        {select}
+        {/* {select} */}
         {
           <BugFrontLauncher>
             <Select onClick={() => this.handleSelect("select")} />
