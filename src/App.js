@@ -1,79 +1,9 @@
 import React, { Component, Fragment } from "react";
-import styled from "styled-components";
-import DrawTool from "./Draw";
-import Overlay from "./Overlay";
-import SelectTool from "./Select";
 import Close from "./Close";
 import Canvas from "./Canvas";
+import { BugFrontLauncher, Select, Hide, Done } from "./Styled";
+import { domRectToStyle, isInside } from "./helper";
 import "./App.css";
-
-const isInside = (rect, mouse) => {
-  const { top, right, bottom, left } = rect;
-  const { x, y } = mouse;
-  return x > left && x < right + 12 && y > top - 12 && y < bottom;
-};
-
-const domRectToStyle = rect => {
-  return {
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom,
-    left: rect.left,
-    width: rect.width,
-    height: rect.height,
-    x: rect.x,
-    y: rect.y
-  };
-};
-
-const BugFrontLauncher = styled.div`
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 20px;
-  height: 50px;
-  width: 260px;
-  margin: 0 auto;
-  background-color: red;
-  box-sizing: border-box;
-  padding: 5px;
-
-  > div {
-    display: inline-block;
-  }
-`;
-
-const Select = styled.div`
-  height: 40px;
-  width: 40px;
-  background-color: yellow;
-  cursor: pointer;
-  margin-left: 20px;
-`;
-
-const Draw = styled.div`
-  height: 40px;
-  width: 40px;
-  background-color: green;
-  cursor: pointer;
-  margin-left: 20px;
-`;
-
-const Done = styled.div`
-  height: 40px;
-  width: 40px;
-  background-color: blue;
-  cursor: pointer;
-  margin-left: 20px;
-`;
-
-const HighlightBorder = styled.div`
-  box-sizing: border-box;
-  overflow: hidden;
-  position: absolute;
-  border: 2px solid yellow;
-  z-index: -1;
-`;
 
 class App extends Component {
   constructor(props) {
@@ -100,28 +30,7 @@ class App extends Component {
   };
 
   activateInspector = () => {
-    // document.addEventListener("click", this.handleClick, false);
     document.addEventListener("mousemove", this.mouseMove, false);
-  };
-
-  deactivateInspector = () => {};
-
-  handleClick = e => {
-    const x = e.clientX;
-    const y = e.clientY;
-    if (this.selection) {
-      document.removeEventListener("mousemove", this.mouseMove, false);
-      this.setState({ endMousePosition: { x, y }, selectionMode: false });
-      this.selection = false;
-    } else {
-      this.setState({
-        startMousePosition: { x, y },
-        endMousePosition: { x, y },
-        selectionMode: true
-      });
-      document.addEventListener("mousemove", this.mouseMove, false);
-      this.selection = true;
-    }
   };
 
   handleSelect = mode => {
@@ -180,34 +89,11 @@ class App extends Component {
   };
 
   render() {
-    const {
-      isFeedBackBoxOpen,
-      selectionMode,
-      startMousePosition,
-      endMousePosition,
-      hoverElementStyle,
-      selections,
-      activeBoxes
-    } = this.state;
+    const { hoverElementStyle, selections, activeBoxes } = this.state;
     console.log(selections);
-    // const style = selectionMode
-    //   ? {
-    //       x1: startMousePosition.x,
-    //       y1: startMousePosition.y,
-    //       x2: endMousePosition.x,
-    //       y2: endMousePosition.y
-    //     }
-    //   : {};
-
-    // // const overlay = selectionMode && <DrawTool style={style} />;
-
-    // const select = hoverElementStyle && (
-    //   <SelectTool style={hoverElementStyle} />
-    // );
 
     return (
       <Fragment>
-        {/* <Overlay selections={selections} /> */}
         {activeBoxes.map((x, i) => (
           <Close
             key={i}
@@ -217,12 +103,10 @@ class App extends Component {
           />
         ))}
         <Canvas selections={selections} hoveredNode={hoverElementStyle} />
-        {/* {overlay} */}
-        {/* {select} */}
         {
           <BugFrontLauncher>
             <Select onClick={() => this.handleSelect("select")} />
-            <Draw onClick={() => this.handleSelect("draw")} />
+            <Hide onClick={() => this.handleSelect("draw")} />
             <Done onClick={() => this.handleSelect("done")} />
           </BugFrontLauncher>
         }
