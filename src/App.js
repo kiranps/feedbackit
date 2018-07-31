@@ -1,22 +1,23 @@
-import React, { Component, Fragment } from 'react';
-import styled from 'styled-components';
-import DrawTool from './Draw';
-import Overlay from './Overlay';
-import SelectTool from './Select'
-import './App.css';
+import React, { Component, Fragment } from "react";
+import styled from "styled-components";
+import DrawTool from "./Draw";
+import Overlay from "./Overlay";
+import SelectTool from "./Select";
+import Canvas from "./Canvas";
+import "./App.css";
 
-const domRectToStyle = (rect) => {
-  return ({
-    top: rect.top+"px",
-    right: rect.right+"px",
-    bottom: rect.bottom+"px",
-    left: rect.left+"px",
-    width: rect.width+"px",
-    height: rect.height+"px",
-    x: rect.x+"px",
-    y: rect.y+"px"
-  })
-}
+const domRectToStyle = rect => {
+  return {
+    top: rect.top,
+    right: rect.right,
+    bottom: rect.bottom,
+    left: rect.left,
+    width: rect.width,
+    height: rect.height,
+    x: rect.x,
+    y: rect.y
+  };
+};
 
 const BugFrontLauncher = styled.div`
   position: absolute;
@@ -33,7 +34,7 @@ const BugFrontLauncher = styled.div`
   > div {
     display: inline-block;
   }
-`
+`;
 
 const Select = styled.div`
   height: 40px;
@@ -41,7 +42,7 @@ const Select = styled.div`
   background-color: yellow;
   cursor: pointer;
   margin-left: 20px;
-`
+`;
 
 const Draw = styled.div`
   height: 40px;
@@ -49,7 +50,7 @@ const Draw = styled.div`
   background-color: green;
   cursor: pointer;
   margin-left: 20px;
-`
+`;
 
 const Done = styled.div`
   height: 40px;
@@ -57,7 +58,7 @@ const Done = styled.div`
   background-color: blue;
   cursor: pointer;
   margin-left: 20px;
-`
+`;
 
 const HighlightBorder = styled.div`
   box-sizing: border-box;
@@ -65,12 +66,12 @@ const HighlightBorder = styled.div`
   position: absolute;
   border: 2px solid yellow;
   z-index: -1;
-`
+`;
 
 class App extends Component {
   constructor(props) {
-    super(props)
-  
+    super(props);
+
     this.state = {
       mode: null,
       isFeedBackBoxOpen: false,
@@ -78,41 +79,44 @@ class App extends Component {
       startMousePosition: null,
       endMousePosition: null,
       selections: []
-    }
-    this.selection = false
+    };
+    this.selection = false;
   }
 
   handleLauncherClick = () => {
-    this.activateInspector()
-  }
+    this.activateInspector();
+  };
 
   toggleFeedBackBox = () => {
-    this.setState({isFeedBackBoxOpen: !this.state.isFeedBackBoxOpen})
-  }
+    this.setState({ isFeedBackBoxOpen: !this.state.isFeedBackBoxOpen });
+  };
 
   activateInspector = () => {
     // document.addEventListener("click", this.handleClick, false);
     document.addEventListener("mousemove", this.mouseMove, false);
-  }
+  };
 
-  deactivateInspector = () => {
-  }
+  deactivateInspector = () => {};
 
-  handleClick = (e) => {
-    const x = e.clientX
-    const y = e.clientY
-    if(this.selection) {
+  handleClick = e => {
+    const x = e.clientX;
+    const y = e.clientY;
+    if (this.selection) {
       document.removeEventListener("mousemove", this.mouseMove, false);
-      this.setState({endMousePosition: {x, y}, selectionMode: false})
-      this.selection = false
+      this.setState({ endMousePosition: { x, y }, selectionMode: false });
+      this.selection = false;
     } else {
-      this.setState({startMousePosition: {x, y}, endMousePosition: {x, y}, selectionMode: true})
+      this.setState({
+        startMousePosition: { x, y },
+        endMousePosition: { x, y },
+        selectionMode: true
+      });
       document.addEventListener("mousemove", this.mouseMove, false);
-      this.selection = true
+      this.selection = true;
     }
-  }
+  };
 
-  handleSelect = (mode) => {
+  handleSelect = mode => {
     switch (mode) {
       case "select":
         document.addEventListener("mousemove", this.mouseMove, false);
@@ -125,56 +129,73 @@ class App extends Component {
       default:
         break;
     }
-    this.setState({mode})
-  }
+    this.setState({ mode });
+  };
 
   handleSelectionMode = () => {
-    console.log("hello")
-    const {hoverElementStyle} = this.state;
-    if(hoverElementStyle) {
-      this.setState({selections: [...this.state.selections, hoverElementStyle], hoverElementStyle: null})
+    console.log("hello");
+    const { hoverElementStyle } = this.state;
+    if (hoverElementStyle) {
+      this.setState({
+        selections: [...this.state.selections, hoverElementStyle],
+        hoverElementStyle: null
+      });
     }
-  }
+  };
 
-  mouseMove = (e) => {
-    const x = e.clientX
-    const y = e.clientY
-    this.setState({endMousePosition: {x, y}})
-    const hoverElement = e.target
-    const hoverElementLayout = hoverElement.getBoundingClientRect()
-    const hoverElementStyle = !["HTML", "BODY"].includes(hoverElement.tagName) ? domRectToStyle(hoverElementLayout) : null
-    this.setState({hoverElementStyle})
-  }
+  mouseMove = e => {
+    const x = e.clientX;
+    const y = e.clientY;
+    this.setState({ endMousePosition: { x, y } });
+    const hoverElement = e.target;
+    const hoverElementLayout = hoverElement.getBoundingClientRect();
+    const hoverElementStyle = !["HTML", "BODY"].includes(hoverElement.tagName)
+      ? domRectToStyle(hoverElementLayout)
+      : null;
+    this.setState({ hoverElementStyle });
+  };
 
   closeFeedBackBox = () => {
-    this.deactivateInspector()
-  }
-  
+    this.deactivateInspector();
+  };
+
   render() {
-    const {isFeedBackBoxOpen, selectionMode, startMousePosition, endMousePosition, hoverElementStyle, selections} = this.state
-    console.log(selections)
-    const style = selectionMode ? {
-      x1: startMousePosition.x,
-      y1: startMousePosition.y,
-      x2: endMousePosition.x,
-      y2: endMousePosition.y
-    } : {}
+    const {
+      isFeedBackBoxOpen,
+      selectionMode,
+      startMousePosition,
+      endMousePosition,
+      hoverElementStyle,
+      selections
+    } = this.state;
+    console.log(selections);
+    const style = selectionMode
+      ? {
+          x1: startMousePosition.x,
+          y1: startMousePosition.y,
+          x2: endMousePosition.x,
+          y2: endMousePosition.y
+        }
+      : {};
 
-    const overlay = selectionMode && <DrawTool style={style}/>
+    const overlay = selectionMode && <DrawTool style={style} />;
 
-    const select = hoverElementStyle && <SelectTool style={hoverElementStyle}/>
+    const select = hoverElementStyle && (
+      <SelectTool style={hoverElementStyle} />
+    );
 
     return (
       <Fragment>
-        <Overlay selections={selections}/>
-        {overlay}
+        {/* <Overlay selections={selections} /> */}
+        <Canvas selections={selections} />
+        {/* {overlay} */}
         {select}
         {
-        <BugFrontLauncher>
-          <Select onClick={() => this.handleSelect("select")}/>
-          <Draw onClick={() => this.handleSelect("draw")}/>
-          <Done onClick={() => this.handleSelect("done")}/>
-        </BugFrontLauncher>
+          <BugFrontLauncher>
+            <Select onClick={() => this.handleSelect("select")} />
+            <Draw onClick={() => this.handleSelect("draw")} />
+            <Done onClick={() => this.handleSelect("done")} />
+          </BugFrontLauncher>
         }
       </Fragment>
     );
