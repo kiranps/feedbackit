@@ -12,7 +12,7 @@ export const domRectToStyle = rect => {
     left: rect.left,
     width: rect.width,
     height: rect.height,
-    x: rect.x,
-    y: rect.y
+    x: rect.x + window.scrollX,
+    y: rect.y + window.scrollY
   };
 };

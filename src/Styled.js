@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const BugFrontLauncher = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   bottom: 20px;
@@ -39,5 +39,4 @@ export const Canvas = styled.canvas`
   pointer-events: none;
   left: 0;
   top: 0;
-  cursor: crosshair;
 `;

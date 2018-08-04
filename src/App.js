@@ -15,12 +15,15 @@ class App extends Component {
       isFeedBackBoxOpen: false,
       selectionMode: false,
       startMousePosition: null,
-      endMousePosition: null,
       selections: [],
       activeBoxes: []
     };
     this.selection = false;
   }
+
+  componentDidMount = () => {
+    document.body.style.cursor = "cross-hair";
+  };
 
   handleLauncherClick = () => {
     this.activateInspector();
@@ -68,7 +71,9 @@ class App extends Component {
     const y = e.clientY;
     const activeBoxes =
       this.state.selections.filter(box => isInside(box, { x, y })) || [];
-    this.setState({ endMousePosition: { x, y } });
+    if (activeBoxes.length > 0) {
+      document.body.style.cursor = "pointer";
+    }
     const hoverElement = e.target;
     const hoverElementLayout = hoverElement.getBoundingClientRect();
     const hoverElementStyle = !["HTML", "BODY", "svg", "path"].includes(
@@ -97,8 +102,8 @@ class App extends Component {
         {activeBoxes.map((x, i) => (
           <Close
             key={i}
-            top={x.top - 12}
-            left={x.left + x.width - 12}
+            top={x.y - 12}
+            left={x.x + x.width - 12}
             onClick={() => this.handleDelete(x.key)}
           />
         ))}
