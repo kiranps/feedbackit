@@ -1,16 +1,15 @@
 import React, { Component } from "react";
-import { Canvas } from "./Styled";
+import { Canvas } from "./Comp";
 
 export default class Overlay extends Component {
   constructor(props) {
     super(props);
     const windowHeight = window.innerHeight;
-    const windowWidth = window.innerHeight;
-    const documentHeight = document.body.offsetHeight;
-    const documentWidth = document.body.offsetWidth;
+    const windowWidth = window.innerWidth;
+    const documentHeight = document.body.scrollHeight;
+    const documentWidth = document.body.scrollWidth;
     this.height = windowHeight > documentHeight ? windowHeight : documentHeight;
     this.width = windowWidth > documentWidth ? windowWidth : documentWidth;
-    this.canvasRef = React.createRef();
     this.state = {
       activeRect: null
     };
@@ -21,7 +20,7 @@ export default class Overlay extends Component {
   };
 
   clearCanvas = () => {
-    const canvas = this.canvasRef.current;
+    const canvas = this.canvasRef;
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "rgba(102, 102, 102, 0.5)";
@@ -41,7 +40,7 @@ export default class Overlay extends Component {
 
   drawRect = rect => {
     const { x, y, width, height } = rect;
-    const canvas = this.canvasRef.current;
+    const canvas = this.canvasRef;
     const ctx = canvas.getContext("2d");
     ctx.beginPath();
     ctx.lineWidth = "2";
@@ -56,7 +55,7 @@ export default class Overlay extends Component {
       <Canvas
         height={this.height}
         width={this.width}
-        innerRef={this.canvasRef}
+        canvasRef={el => (this.canvasRef = el)}
       />
     );
   }

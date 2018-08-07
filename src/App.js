@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import Close from "./Close";
 import Canvas from "./Canvas";
-import { BugFrontLauncher, Done } from "./Styled";
+import { BugFrontLauncher, Done } from "./Comp";
 import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import "./App.css";
@@ -34,18 +34,40 @@ class App extends Component {
   };
 
   activateInspector = () => {
-    document.addEventListener("mousemove", this.mouseMove, false);
+    document
+      .getElementById("clone")
+      .contentDocument.addEventListener("mousemove", this.mouseMove, false);
   };
 
   handleSelect = mode => {
     switch (mode) {
       case "select":
-        document.addEventListener("mousemove", this.mouseMove, false);
-        document.addEventListener("click", this.handleSelectionMode, false);
+        document
+          .getElementById("clone")
+          .contentDocument.addEventListener("mousemove", this.mouseMove, false);
+        document
+          .getElementById("clone")
+          .contentDocument.addEventListener(
+            "click",
+            this.handleSelectionMode,
+            false
+          );
         break;
       case "done":
-        document.removeEventListener("mousemove", this.mouseMove, false);
-        document.removeEventListener("click", this.handleSelectionMode, false);
+        document
+          .getElementById("clone")
+          .contentDocument.removeEventListener(
+            "mousemove",
+            this.mouseMove,
+            false
+          );
+        document
+          .getElementById("clone")
+          .contentDocument.removeEventListener(
+            "click",
+            this.handleSelectionMode,
+            false
+          );
         break;
       default:
         break;
@@ -67,8 +89,10 @@ class App extends Component {
   };
 
   mouseMove = e => {
+    console.log(e);
     const x = e.clientX;
     const y = e.clientY;
+    // console.log(x, y);
     const activeBoxes =
       this.state.selections.filter(box => isInside(box, { x, y })) || [];
     if (activeBoxes.length > 0) {
