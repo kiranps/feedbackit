@@ -4,7 +4,7 @@ export const isInside = (rect, mouse) => {
   return x > left && x < right + 12 && y > top - 12 && y < bottom;
 };
 
-export const domRectToStyle = rect => {
+export const domRectToStyle = (rect, ele) => {
   return {
     top: rect.top,
     right: rect.right,
@@ -12,8 +12,8 @@ export const domRectToStyle = rect => {
     left: rect.left,
     width: rect.width,
     height: rect.height,
-    x: rect.x + document.getElementById("clone").contentWindow.scrollX,
-    y: rect.y + document.getElementById("clone").contentWindow.scrollY
+    x: rect.x + ele.scrollX,
+    y: rect.y + ele.scrollY
   };
 };
 
@@ -36,18 +36,20 @@ const removeHref = node => {
 export const cloneDocument = () => {
   const newDocument = removeHref(removeScripts(document.cloneNode(true)))
     .documentElement.innerHTML;
-  const iframe = document.createElement("iframe");
-  iframe.id = "clone";
-  iframe.src = "about:blank";
-  iframe.frameborder = "0";
-  iframe.style =
-    "position:fixed;left:0;top:0;height:100%;width:100%;border:0px;vertical-align:bottom";
-  document.body.append(iframe);
-  const doc = document.getElementById("clone");
-  doc.contentWindow.document.open("text/htmlreplace");
-  doc.contentWindow.document.write(newDocument);
-  doc.contentWindow.document.close();
-  unloadScrollBars();
+  return newDocument;
+  // const iframe = document.createElement("iframe");
+  // iframe.id = "clone";
+  // iframe.src = "about:blank";
+  // iframe.frameborder = "0";
+  // iframe.style =
+  //   "position:fixed;left:0;top:0;height:100%;width:100%;border:0px;vertical-align:bottom";
+  // document.body.append(iframe);
+  // const doc = document.getElementById("clone");
+
+  // doc.contentWindow.document.open("text/htmlreplace");
+  // doc.contentWindow.document.write(newDocument);
+  // doc.contentWindow.document.close();
+  // unloadScrollBars();
 };
 
 const reloadScrollBars = () => {

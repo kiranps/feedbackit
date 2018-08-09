@@ -3,7 +3,7 @@ import React from "react";
 const Close = ({ top, left, onClick }) => (
   <svg
     style={{
-      zIndex: "3",
+      zIndex: "999999999999999",
       width: "24px",
       height: "24px",
       position: "absolute",

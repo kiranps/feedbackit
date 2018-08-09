@@ -48,6 +48,7 @@ export default class Overlay extends Component {
     ctx.strokeStyle = "yellow";
     ctx.stroke();
     ctx.clearRect(x, y, width, height);
+    ctx.save();
   };
 
   render() {

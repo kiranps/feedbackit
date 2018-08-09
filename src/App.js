@@ -4,6 +4,9 @@ import Canvas from "./Canvas";
 import { BugFrontLauncher, Done } from "./Comp";
 import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
+import Frame, { FrameContextConsumer } from "react-frame-component";
+import { cloneDocument } from "./helper";
+// import Clone from "./Clone";
 import "./App.css";
 
 class App extends Component {
@@ -25,49 +28,16 @@ class App extends Component {
     document.body.style.cursor = "cross-hair";
   };
 
-  handleLauncherClick = () => {
-    this.activateInspector();
-  };
-
-  toggleFeedBackBox = () => {
-    this.setState({ isFeedBackBoxOpen: !this.state.isFeedBackBoxOpen });
-  };
-
-  activateInspector = () => {
-    document
-      .getElementById("clone")
-      .contentDocument.addEventListener("mousemove", this.mouseMove, false);
-  };
-
-  handleSelect = mode => {
+  handleSelect = (mode, ele) => {
+    console.log(mode);
     switch (mode) {
       case "select":
-        document
-          .getElementById("clone")
-          .contentDocument.addEventListener("mousemove", this.mouseMove, false);
-        document
-          .getElementById("clone")
-          .contentDocument.addEventListener(
-            "click",
-            this.handleSelectionMode,
-            false
-          );
+        ele.addEventListener("mousemove", this.mouseMove, false);
+        ele.addEventListener("click", this.handleSelectionMode, false);
         break;
       case "done":
-        document
-          .getElementById("clone")
-          .contentDocument.removeEventListener(
-            "mousemove",
-            this.mouseMove,
-            false
-          );
-        document
-          .getElementById("clone")
-          .contentDocument.removeEventListener(
-            "click",
-            this.handleSelectionMode,
-            false
-          );
+        ele.removeEventListener("mousemove", this.mouseMove, false);
+        ele.removeEventListener("click", this.handleSelectionMode, false);
         break;
       default:
         break;
@@ -77,6 +47,7 @@ class App extends Component {
 
   handleSelectionMode = () => {
     const { hoverElementStyle } = this.state;
+    console.log(hoverElementStyle);
     if (hoverElementStyle) {
       this.setState({
         selections: [
@@ -89,10 +60,8 @@ class App extends Component {
   };
 
   mouseMove = e => {
-    console.log(e);
     const x = e.clientX;
     const y = e.clientY;
-    // console.log(x, y);
     const activeBoxes =
       this.state.selections.filter(box => isInside(box, { x, y })) || [];
     if (activeBoxes.length > 0) {
@@ -103,7 +72,7 @@ class App extends Component {
     const hoverElementStyle = !["HTML", "BODY", "svg", "path"].includes(
       hoverElement.tagName
     )
-      ? domRectToStyle(hoverElementLayout)
+      ? domRectToStyle(hoverElementLayout, e.view)
       : null;
     this.setState({ hoverElementStyle, activeBoxes });
   };
@@ -122,25 +91,41 @@ class App extends Component {
     const { hoverElementStyle, selections, activeBoxes } = this.state;
 
     return (
-      <Fragment>
-        {activeBoxes.map((x, i) => (
-          <Close
-            key={i}
-            top={x.y - 12}
-            left={x.x + x.width - 12}
-            onClick={() => this.handleDelete(x.key)}
-          />
-        ))}
-        <Canvas selections={selections} hoveredNode={hoverElementStyle} />
-        {
-          <BugFrontLauncher>
-            <Drag />
-            <Select onClick={() => this.handleSelect("select")} />
-            <Hide onClick={() => this.handleSelect("draw")} />
-            <Done onClick={() => this.handleSelect("done")} />
-          </BugFrontLauncher>
-        }
-      </Fragment>
+      <Frame
+        initialContent={cloneDocument()}
+        frameBorder="none"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%"
+        }}
+        mountTarget="#root"
+      >
+        <FrameContextConsumer>
+          {// Callback is invoked with iframe's window and document instances
+          ({ document, window }) => (
+            <Fragment>
+              <Canvas selections={selections} hoveredNode={hoverElementStyle} />
+              {activeBoxes.map((x, i) => (
+                <Close
+                  key={i}
+                  top={x.y - 12}
+                  left={x.x + x.width - 12}
+                  onClick={() => this.handleDelete(x.key)}
+                />
+              ))}
+              <BugFrontLauncher>
+                <Drag />
+                <Select onClick={() => this.handleSelect("select", document)} />
+                <Hide onClick={() => this.handleSelect("draw")} />
+                <Done onClick={() => this.handleSelect("done", document)} />
+              </BugFrontLauncher>
+            </Fragment>
+          )}
+        </FrameContextConsumer>
+      </Frame>
     );
   }
 }
