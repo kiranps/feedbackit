@@ -2,6 +2,7 @@ import React from "react";
 
 export const Drag = () => (
   <svg
+    data-highlight-ignore
     style={{
       width: "24px",
       height: "38px",
@@ -20,6 +21,7 @@ export const Drag = () => (
 
 export const Select = ({ onClick }) => (
   <svg
+    data-highlight-ignore
     style={{
       width: "24px",
       height: "40px",
@@ -39,6 +41,7 @@ export const Select = ({ onClick }) => (
 
 export const Hide = ({ onClick }) => (
   <svg
+    data-highlight-ignore
     style={{
       width: "24px",
       height: "40px",

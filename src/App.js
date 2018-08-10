@@ -5,7 +5,7 @@ import { BugFrontLauncher, Done } from "./Comp";
 import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import Frame, { FrameContextConsumer } from "react-frame-component";
-import { cloneDocument } from "./helper";
+import { cloneDocument, unloadScrollBars } from "./helper";
 import html2canvas from "html2canvas";
 // import Clone from "./Clone";
 import "./App.css";
@@ -13,6 +13,15 @@ import "./App.css";
 class App extends Component {
   constructor(props) {
     super(props);
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const documentHeight = document.body.scrollHeight;
+    const documentWidth = document.body.scrollWidth;
+    this.height = windowHeight > documentHeight ? windowHeight : documentHeight;
+    this.width = documentWidth;
+
+    console.log(this.height);
+    console.log(this.width);
 
     this.state = {
       mode: null,
@@ -26,7 +35,7 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-    document.body.style.cursor = "cross-hair";
+    unloadScrollBars();
   };
 
   handleSelect = (mode, ele) => {
@@ -81,7 +90,7 @@ class App extends Component {
     const hoverElementLayout = hoverElement.getBoundingClientRect();
     const hoverElementStyle =
       highlightIgnore !== "true" &&
-      !["HTML", "BODY", "svg", "path"].includes(hoverElement.tagName)
+      !["HTML", "BODY", "path"].includes(hoverElement.tagName)
         ? domRectToStyle(hoverElementLayout, e.view)
         : null;
     this.setState({ hoverElementStyle, activeBoxes });
@@ -117,7 +126,12 @@ class App extends Component {
           {// Callback is invoked with iframe's window and document instances
           ({ document, window }) => (
             <Fragment>
-              <Canvas selections={selections} hoveredNode={hoverElementStyle} />
+              <Canvas
+                selections={selections}
+                hoveredNode={hoverElementStyle}
+                height={this.height}
+                width={this.width}
+              />
               {activeBoxes.map((x, i) => (
                 <Close
                   key={i}

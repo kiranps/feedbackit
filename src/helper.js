@@ -57,7 +57,7 @@ const reloadScrollBars = () => {
   document.body.scroll = "yes"; // ie only
 };
 
-const unloadScrollBars = () => {
+export const unloadScrollBars = () => {
   document.documentElement.style.overflow = "hidden"; // firefox, chrome
   document.body.scroll = "no"; // ie only
 };

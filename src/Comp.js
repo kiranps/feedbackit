@@ -47,7 +47,7 @@ export const BugFrontLauncher = ({ children }) => (
 );
 
 export const Done = ({ height, width, onClick }) => (
-  <div style={styles.done} onClick={onClick}>
+  <div data-highlight-ignore style={styles.done} onClick={onClick}>
     DONE
   </div>
 );
