@@ -38,11 +38,18 @@ const styles = {
 };
 
 export const BugFrontLauncher = ({ children }) => (
-  <div style={styles.launcher} children={children} />
+  <div
+    data-html2canvas-ignore
+    data-highlight-ignore
+    style={styles.launcher}
+    children={children}
+  />
 );
 
-export const Done = ({ height, width, canvasRef }) => (
-  <div style={styles.done}>DONE</div>
+export const Done = ({ height, width, onClick }) => (
+  <div style={styles.done} onClick={onClick}>
+    DONE
+  </div>
 );
 
 export const Canvas = ({ height, width, canvasRef }) => (

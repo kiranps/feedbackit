@@ -43,7 +43,7 @@ export default class Overlay extends Component {
     const canvas = this.canvasRef;
     const ctx = canvas.getContext("2d");
     ctx.beginPath();
-    ctx.lineWidth = "2";
+    ctx.lineWidth = "4";
     ctx.rect(x, y, width, height);
     ctx.strokeStyle = "yellow";
     ctx.stroke();

@@ -6,6 +6,7 @@ import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import { cloneDocument } from "./helper";
+import html2canvas from "html2canvas";
 // import Clone from "./Clone";
 import "./App.css";
 
@@ -29,7 +30,6 @@ class App extends Component {
   };
 
   handleSelect = (mode, ele) => {
-    console.log(mode);
     switch (mode) {
       case "select":
         ele.addEventListener("mousemove", this.mouseMove, false);
@@ -38,6 +38,16 @@ class App extends Component {
       case "done":
         ele.removeEventListener("mousemove", this.mouseMove, false);
         ele.removeEventListener("click", this.handleSelectionMode, false);
+        html2canvas(ele.body).then(canvasElm => {
+          const imageType = "image/png";
+          const imageData = canvasElm.toDataURL(imageType);
+          document.location.href = imageData.replace(
+            imageType,
+            "image/octet-stream"
+          );
+        });
+        break;
+      case "hide":
         break;
       default:
         break;
@@ -47,7 +57,6 @@ class App extends Component {
 
   handleSelectionMode = () => {
     const { hoverElementStyle } = this.state;
-    console.log(hoverElementStyle);
     if (hoverElementStyle) {
       this.setState({
         selections: [
@@ -68,12 +77,13 @@ class App extends Component {
       document.body.style.cursor = "pointer";
     }
     const hoverElement = e.target;
+    const { highlightIgnore } = hoverElement.dataset;
     const hoverElementLayout = hoverElement.getBoundingClientRect();
-    const hoverElementStyle = !["HTML", "BODY", "svg", "path"].includes(
-      hoverElement.tagName
-    )
-      ? domRectToStyle(hoverElementLayout, e.view)
-      : null;
+    const hoverElementStyle =
+      highlightIgnore !== "true" &&
+      !["HTML", "BODY", "svg", "path"].includes(hoverElement.tagName)
+        ? domRectToStyle(hoverElementLayout, e.view)
+        : null;
     this.setState({ hoverElementStyle, activeBoxes });
   };
 
@@ -119,7 +129,7 @@ class App extends Component {
               <BugFrontLauncher>
                 <Drag />
                 <Select onClick={() => this.handleSelect("select", document)} />
-                <Hide onClick={() => this.handleSelect("draw")} />
+                <Hide onClick={() => this.handleSelect("hide")} />
                 <Done onClick={() => this.handleSelect("done", document)} />
               </BugFrontLauncher>
             </Fragment>
