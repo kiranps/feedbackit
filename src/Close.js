@@ -11,6 +11,7 @@ const Close = ({ top, left, onClick }) => (
       top: top + "px",
       left: left + "px"
     }}
+    data-highlight-ignore
     viewBox="0 0 24 24"
     onClick={onClick}
   >

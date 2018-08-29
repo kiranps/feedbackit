@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "html2canvas": "^1.0.0-alpha.12",
+    "puppeteer": "^1.7.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-frame-component": "^4.0.1",

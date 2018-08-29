@@ -5,9 +5,8 @@ import { BugFrontLauncher, Done } from "./Comp";
 import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import Frame, { FrameContextConsumer } from "react-frame-component";
-import { cloneDocument, unloadScrollBars } from "./helper";
+import { cloneDocument, unloadScrollBars, screenCapture } from "./helper";
 import html2canvas from "html2canvas";
-// import Clone from "./Clone";
 import "./App.css";
 
 class App extends Component {
@@ -31,6 +30,7 @@ class App extends Component {
       selections: [],
       activeBoxes: []
     };
+
     this.selection = false;
   }
 
@@ -47,14 +47,7 @@ class App extends Component {
       case "done":
         ele.removeEventListener("mousemove", this.mouseMove, false);
         ele.removeEventListener("click", this.handleSelectionMode, false);
-        html2canvas(ele.body).then(canvasElm => {
-          const imageType = "image/png";
-          const imageData = canvasElm.toDataURL(imageType);
-          document.location.href = imageData.replace(
-            imageType,
-            "image/octet-stream"
-          );
-        });
+        screenCapture(ele.body);
         break;
       case "hide":
         break;
@@ -96,10 +89,6 @@ class App extends Component {
     this.setState({ hoverElementStyle, activeBoxes });
   };
 
-  closeFeedBackBox = () => {
-    this.deactivateInspector();
-  };
-
   handleDelete = key => {
     this.setState({
       selections: this.state.selections.filter(x => x.key !== key)
@@ -124,7 +113,7 @@ class App extends Component {
       >
         <FrameContextConsumer>
           {// Callback is invoked with iframe's window and document instances
-          ({ document, window }) => (
+          ({ document }) => (
             <Fragment>
               <Canvas
                 selections={selections}

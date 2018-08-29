@@ -3,4 +3,11 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 
-window.onload = () => ReactDOM.render(<App />, document.getElementById("root"));
+window.screenCapture = (function() {
+  const div = document.createElement("div");
+  document.body.appendChild(div);
+  return {
+    launch: () => ReactDOM.render(<App />, div),
+    close: () => ReactDOM.unmountComponentAtNode(div)
+  };
+})();

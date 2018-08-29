@@ -1,3 +1,5 @@
+import html2canvas from "html2canvas";
+
 export const isInside = (rect, mouse) => {
   const { top, right, bottom, left } = rect;
   const { x, y } = mouse;
@@ -37,19 +39,6 @@ export const cloneDocument = () => {
   const newDocument = removeHref(removeScripts(document.cloneNode(true)))
     .documentElement.innerHTML;
   return newDocument;
-  // const iframe = document.createElement("iframe");
-  // iframe.id = "clone";
-  // iframe.src = "about:blank";
-  // iframe.frameborder = "0";
-  // iframe.style =
-  //   "position:fixed;left:0;top:0;height:100%;width:100%;border:0px;vertical-align:bottom";
-  // document.body.append(iframe);
-  // const doc = document.getElementById("clone");
-
-  // doc.contentWindow.document.open("text/htmlreplace");
-  // doc.contentWindow.document.write(newDocument);
-  // doc.contentWindow.document.close();
-  // unloadScrollBars();
 };
 
 const reloadScrollBars = () => {
@@ -60,4 +49,12 @@ const reloadScrollBars = () => {
 export const unloadScrollBars = () => {
   document.documentElement.style.overflow = "hidden"; // firefox, chrome
   document.body.scroll = "no"; // ie only
+};
+
+export const screenCapture = ele => {
+  html2canvas(ele).then(canvasElm => {
+    const imageType = "image/png";
+    const imageData = canvasElm.toDataURL(imageType);
+    document.location.href = imageData.replace(imageType, "image/octet-stream");
+  });
 };
