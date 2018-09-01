@@ -2,20 +2,18 @@ import React, { Component, Fragment } from "react";
 import Close from "./Close";
 import Canvas from "./Canvas";
 import { BugFrontLauncher, Done } from "./Comp";
-import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import {
+  domRectToStyle,
+  isInside,
   cloneDocument,
   unloadScrollBars,
-  screenCapture,
-  drawSelections,
-  getImage
+  takeScreenShotOfIframe,
+  mergeScreenShotWithSelections,
+  puppeterScreenshot
 } from "./helper";
 import absolutify from "absolutify";
-
-import html2canvas from "html2canvas";
-import "./App.css";
 
 class App extends Component {
   constructor(props) {
@@ -29,7 +27,6 @@ class App extends Component {
     this.screenshot = "";
 
     this.state = {
-      mode: null,
       isFeedBackBoxOpen: false,
       selectionMode: false,
       startMousePosition: null,
@@ -50,46 +47,31 @@ class App extends Component {
       width: this.width
     };
 
-    console.log("hello world");
-
-    fetch("http://localhost:3009/", {
-      method: "POST",
-      mode: "cors",
-      cache: "default",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    })
-      .then(response => {
-        return response.blob();
-      })
-      .then(data => {
+    if (!this.props.offline) {
+      puppeterScreenshot(data).then(data => {
         this.screenshot = data;
       });
+    }
 
     unloadScrollBars();
   };
 
-  handleSelect = (mode, ele) => {
-    switch (mode) {
-      case "select":
-        ele.addEventListener("mousemove", this.mouseMove, false);
-        ele.addEventListener("click", this.handleSelectionMode, false);
-        break;
-      case "done":
-        const { selections } = this.state;
-        ele.removeEventListener("mousemove", this.mouseMove, false);
-        ele.removeEventListener("click", this.handleSelectionMode, false);
-        // screenCapture(ele.body);
-        drawSelections(this.screenshot, selections);
-        break;
-      case "hide":
-        break;
-      default:
-        break;
+  handleSelect = ele => {
+    ele.addEventListener("mousemove", this.mouseMove, false);
+    ele.addEventListener("click", this.handleSelectionMode, false);
+  };
+
+  handleHide = () => {};
+
+  handleDone = ele => {
+    ele.removeEventListener("mousemove", this.mouseMove, false);
+    ele.removeEventListener("click", this.handleSelectionMode, false);
+
+    if (this.props.offline) {
+      takeScreenShotOfIframe(ele.body);
+    } else {
+      mergeScreenShotWithSelections(this.screenshot, this.state.selections);
     }
-    this.setState({ mode });
   };
 
   handleSelectionMode = () => {
@@ -166,9 +148,9 @@ class App extends Component {
               ))}
               <BugFrontLauncher>
                 <Drag />
-                <Select onClick={() => this.handleSelect("select", document)} />
-                <Hide onClick={() => this.handleSelect("hide")} />
-                <Done onClick={() => this.handleSelect("done", document)} />
+                <Select onClick={() => this.handleSelect(document)} />
+                <Hide onClick={() => this.handleHide()} />
+                <Done onClick={() => this.handleDone(document)} />
               </BugFrontLauncher>
             </Fragment>
           )}

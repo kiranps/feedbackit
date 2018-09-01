@@ -51,12 +51,8 @@ export const unloadScrollBars = () => {
   document.body.scroll = "no"; // ie only
 };
 
-export const screenCapture = ele => {
-  html2canvas(ele).then(canvasElm => {
-    const imageType = "image/png";
-    const imageData = canvasElm.toDataURL(imageType);
-    document.location.href = imageData.replace(imageType, "image/octet-stream");
-  });
+export const takeScreenShotOfIframe = ele => {
+  html2canvas(ele).then(downloadImage);
 };
 
 function createCanvas(width, height) {
@@ -102,14 +98,14 @@ function drawRect(rect, ctx) {
   ctx.save();
 }
 
-export const drawSelections = (screenshot, selections) => {
+export const mergeScreenShotWithSelections = (screenshot, selections) => {
   convertBlobtoImage(screenshot).then(img => {
-    const newCanvas = combineCanvas(
+    const finalCanvas = combineCanvas(
       drawImageOnCanvas(img),
       drawSelectionsOnCanvas(img.width, img.height, selections)
     );
 
-    downloadImage(newCanvas);
+    downloadImage(finalCanvas);
   });
 };
 
@@ -129,3 +125,16 @@ function downloadImage(canvas) {
   const imageData = canvas.toDataURL(imageType);
   document.location.href = imageData.replace(imageType, "image/octet-stream");
 }
+
+export const puppeterScreenshot = data =>
+  fetch("http://localhost:3009/", {
+    method: "POST",
+    mode: "cors",
+    cache: "default",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(response => {
+    return response.blob();
+  });

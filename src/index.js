@@ -7,7 +7,7 @@ window.screenCapture = (function() {
   const div = document.createElement("div");
   document.body.appendChild(div);
   return {
-    launch: () => ReactDOM.render(<App />, div),
+    launch: ({ offline }) => ReactDOM.render(<App offline={offline} />, div),
     close: () => ReactDOM.unmountComponentAtNode(div)
   };
 })();
