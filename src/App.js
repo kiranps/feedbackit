@@ -5,7 +5,15 @@ import { BugFrontLauncher, Done } from "./Comp";
 import { domRectToStyle, isInside } from "./helper";
 import { Drag, Select, Hide } from "./Icons";
 import Frame, { FrameContextConsumer } from "react-frame-component";
-import { cloneDocument, unloadScrollBars, screenCapture } from "./helper";
+import {
+  cloneDocument,
+  unloadScrollBars,
+  screenCapture,
+  drawSelections,
+  getImage
+} from "./helper";
+import absolutify from "absolutify";
+
 import html2canvas from "html2canvas";
 import "./App.css";
 
@@ -18,9 +26,7 @@ class App extends Component {
     const documentWidth = document.body.scrollWidth;
     this.height = windowHeight > documentHeight ? windowHeight : documentHeight;
     this.width = documentWidth;
-
-    console.log(this.height);
-    console.log(this.width);
+    this.screenshot = "";
 
     this.state = {
       mode: null,
@@ -35,6 +41,33 @@ class App extends Component {
   }
 
   componentDidMount = () => {
+    const doc = cloneDocument();
+    const origin = window.location.origin;
+    const page = absolutify(doc, origin);
+    const data = {
+      html: page,
+      height: this.height,
+      width: this.width
+    };
+
+    console.log("hello world");
+
+    fetch("http://localhost:3009/", {
+      method: "POST",
+      mode: "cors",
+      cache: "default",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+      .then(response => {
+        return response.blob();
+      })
+      .then(data => {
+        this.screenshot = data;
+      });
+
     unloadScrollBars();
   };
 
@@ -45,9 +78,11 @@ class App extends Component {
         ele.addEventListener("click", this.handleSelectionMode, false);
         break;
       case "done":
+        const { selections } = this.state;
         ele.removeEventListener("mousemove", this.mouseMove, false);
         ele.removeEventListener("click", this.handleSelectionMode, false);
-        screenCapture(ele.body);
+        // screenCapture(ele.body);
+        drawSelections(this.screenshot, selections);
         break;
       case "hide":
         break;

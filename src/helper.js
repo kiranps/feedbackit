@@ -58,3 +58,74 @@ export const screenCapture = ele => {
     document.location.href = imageData.replace(imageType, "image/octet-stream");
   });
 };
+
+function createCanvas(width, height) {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  return canvas;
+}
+
+function drawImageOnCanvas(image) {
+  const canvas = createCanvas(image.width, image.height);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(image, 0, 0);
+  return canvas;
+}
+
+function drawSelectionsOnCanvas(width, height, selections) {
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "rgba(102, 102, 102, 0.5)";
+  ctx.fillRect(0, 0, width, height);
+  selections.forEach(x => {
+    drawRect(x, ctx);
+  });
+  return canvas;
+}
+
+function combineCanvas(image, selections) {
+  const ctx = image.getContext("2d");
+  ctx.drawImage(selections, 0, 0);
+  return ctx.canvas;
+}
+
+function drawRect(rect, ctx) {
+  const { x, y, width, height } = rect;
+  ctx.beginPath();
+  ctx.lineWidth = "4";
+  ctx.rect(x, y, width, height);
+  ctx.strokeStyle = "yellow";
+  ctx.stroke();
+  ctx.clearRect(x, y, width, height);
+  ctx.save();
+}
+
+export const drawSelections = (screenshot, selections) => {
+  convertBlobtoImage(screenshot).then(img => {
+    const newCanvas = combineCanvas(
+      drawImageOnCanvas(img),
+      drawSelectionsOnCanvas(img.width, img.height, selections)
+    );
+
+    downloadImage(newCanvas);
+  });
+};
+
+export function convertBlobtoImage(file) {
+  return new Promise(function(resolved, rejected) {
+    var img = new Image();
+    img.onload = function() {
+      resolved(img);
+      URL.revokeObjectURL(this.src);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+function downloadImage(canvas) {
+  const imageType = "image/png";
+  const imageData = canvas.toDataURL(imageType);
+  document.location.href = imageData.replace(imageType, "image/octet-stream");
+}
