@@ -12,4 +12,4 @@ window.screenCapture = (function() {
   };
 })();
 
-window.screenCapture.launch({ offline: true });
+window.screenCapture.launch({ offline: false });

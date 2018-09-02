@@ -51,9 +51,8 @@ export const unloadScrollBars = () => {
   document.body.scroll = "no"; // ie only
 };
 
-export const takeScreenShotOfIframe = ele => {
-  html2canvas(ele).then(downloadImage);
-};
+export const takeScreenShotOfIframe = ele =>
+  html2canvas(ele).then(canvas => canvas.toDataURL());
 
 function createCanvas(width, height) {
   const canvas = document.createElement("canvas");
@@ -98,16 +97,15 @@ function drawRect(rect, ctx) {
   ctx.save();
 }
 
-export const mergeScreenShotWithSelections = (screenshot, selections) => {
+export const mergeScreenShotWithSelections = (screenshot, selections) =>
   convertBlobtoImage(screenshot).then(img => {
     const finalCanvas = combineCanvas(
       drawImageOnCanvas(img),
       drawSelectionsOnCanvas(img.width, img.height, selections)
     );
-
-    downloadImage(finalCanvas);
+    console.log(finalCanvas);
+    return finalCanvas.toDataURL();
   });
-};
 
 export function convertBlobtoImage(file) {
   return new Promise(function(resolved, rejected) {
@@ -116,7 +114,7 @@ export function convertBlobtoImage(file) {
       resolved(img);
       URL.revokeObjectURL(this.src);
     };
-    img.src = URL.createObjectURL(file);
+    img.src = file;
   });
 }
 

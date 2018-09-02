@@ -28,7 +28,7 @@ class App extends Component {
     };
 
     puppeterScreenshot(data).then(data => {
-      this.screenshot = data;
+      this.screenshot = URL.createObjectURL(data);
       this.setState({ screenshotFlag: true });
     });
 
@@ -39,7 +39,8 @@ class App extends Component {
     this.setState({ isScreenShotToolOpened: true });
   };
 
-  updateScreenShot = () => {
+  updateScreenShot = data => {
+    this.screenshot = data;
     this.setState({ isScreenShotToolOpened: false });
   };
 
@@ -47,7 +48,11 @@ class App extends Component {
     const { isScreenShotToolOpened } = this.state;
 
     return isScreenShotToolOpened ? (
-      <ScreenShotTool doc={this.doc} onSave={this.updateScreenShot} />
+      <ScreenShotTool
+        screenshot={this.screenshot}
+        doc={this.doc}
+        onSave={this.updateScreenShot}
+      />
     ) : (
       <FeedBack screenshot={this.screenshot} editScreenShot={this.handleEdit} />
     );

@@ -172,7 +172,7 @@ export const ScreenShotPreview = ({ image, onClick }) => (
   <ScreenShotBox>
     {image ? (
       <Fragment>
-        <ScreenShot src={URL.createObjectURL(image)} />
+        <ScreenShot src={image} />
         <HighlightMessage onClick={onClick} />
       </Fragment>
     ) : (

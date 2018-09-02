@@ -37,25 +37,6 @@ class ScreenShotTool extends Component {
     this.selection = false;
   }
 
-  componentDidMount = () => {
-    const doc = cloneDocument();
-    const origin = window.location.origin;
-    const page = absolutify(doc, origin);
-    const data = {
-      html: page,
-      height: this.height,
-      width: this.width
-    };
-
-    if (!this.props.offline) {
-      puppeterScreenshot(data).then(data => {
-        this.screenshot = data;
-      });
-    }
-
-    unloadScrollBars();
-  };
-
   handleSelect = ele => {
     ele.addEventListener("mousemove", this.mouseMove, false);
     ele.addEventListener("click", this.handleSelectionMode, false);
@@ -67,12 +48,16 @@ class ScreenShotTool extends Component {
     ele.removeEventListener("mousemove", this.mouseMove, false);
     ele.removeEventListener("click", this.handleSelectionMode, false);
 
-    this.props.onSave();
-    // if (this.props.offline) {
-    //   takeScreenShotOfIframe(ele.body);
-    // } else {
-    //   mergeScreenShotWithSelections(this.screenshot, this.state.selections);
-    // }
+    if (this.props.offline) {
+      takeScreenShotOfIframe(ele.body).then(data => this.props.onSave(data));
+    } else {
+      mergeScreenShotWithSelections(
+        this.props.screenshot,
+        this.state.selections
+      ).then(data => {
+        this.props.onSave(data);
+      });
+    }
   };
 
   handleSelectionMode = () => {
