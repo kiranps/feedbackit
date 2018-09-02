@@ -11,3 +11,5 @@ window.screenCapture = (function() {
     close: () => ReactDOM.unmountComponentAtNode(div)
   };
 })();
+
+window.screenCapture.launch({ offline: true });
