@@ -50,11 +50,18 @@ class ScreenShotToolEditor extends Component {
     const { selections } = this.state;
     node.removeEventListener("mousemove", this.mouseMove, false);
     node.removeEventListener("click", this.handleSelectionMode, false);
-    const data = mergeScreenShotWithSelections(
-      this.props.screenshot,
-      this.state.selections
-    );
-    this.props.onSave({ screenshot: data, selections });
+
+    if (this.props.offline) {
+      takeScreenShotOfIframe(node.body).then(img => {
+        this.props.onSave({ screenshot: img.src, selections });
+      });
+    } else {
+      const data = mergeScreenShotWithSelections(
+        this.props.screenshot,
+        this.state.selections
+      );
+      this.props.onSave({ screenshot: data, selections });
+    }
   };
 
   handleSelectionMode = () => {

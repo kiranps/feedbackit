@@ -5,6 +5,7 @@ import App from "./App";
 
 window.screenCapture = (function() {
   const div = document.createElement("div");
+  div.setAttribute("data-html2canvas-ignore", "true");
   document.body.appendChild(div);
   return {
     launch: ({ offline }) => ReactDOM.render(<App offline={offline} />, div),
@@ -12,4 +13,4 @@ window.screenCapture = (function() {
   };
 })();
 
-window.screenCapture.launch({ offline: false });
+window.screenCapture.launch({ offline: true });

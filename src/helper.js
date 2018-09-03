@@ -51,9 +51,6 @@ export const unloadScrollBars = () => {
   document.body.scroll = "no"; // ie only
 };
 
-export const takeScreenShotOfIframe = ele =>
-  html2canvas(ele).then(canvas => canvas.toDataURL());
-
 function createCanvas(width, height) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -115,6 +112,18 @@ export function convertBlobtoImage(file) {
   });
 }
 
+export function canvasToImage(canvas) {
+  const imageType = "image/png";
+  const imageData = canvas.toDataURL(imageType);
+  return new Promise(function(resolved, rejected) {
+    var img = new Image();
+    img.onload = function() {
+      resolved(img);
+    };
+    img.src = imageData;
+  });
+}
+
 function downloadImage(canvas) {
   const imageType = "image/png";
   const imageData = canvas.toDataURL(imageType);
@@ -130,6 +139,11 @@ export const puppeterScreenshot = data =>
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
-  }).then(response => {
-    return response.blob();
-  });
+  })
+    .then(response => {
+      return response.blob();
+    })
+    .then(convertBlobtoImage);
+
+export const takeScreenShotOfIframe = ele =>
+  html2canvas(ele).then(canvasToImage);

@@ -4,7 +4,7 @@ import {
   cloneDocument,
   unloadScrollBars,
   puppeterScreenshot,
-  convertBlobtoImage
+  takeScreenShotOfIframe
 } from "./helper";
 import FeedBack from "./FeedBack";
 import absolutify from "absolutify";
@@ -34,12 +34,17 @@ class App extends Component {
       width: this.width
     };
 
-    puppeterScreenshot(data)
-      .then(convertBlobtoImage)
-      .then(data => {
+    if (this.props.offline) {
+      takeScreenShotOfIframe(document.body).then(data => {
         this.screenshot = data;
         this.setState({ screenshotFlag: true });
       });
+    } else {
+      puppeterScreenshot(data).then(data => {
+        this.screenshot = data;
+        this.setState({ screenshotFlag: true });
+      });
+    }
 
     unloadScrollBars();
   };
@@ -66,6 +71,7 @@ class App extends Component {
       <ScreenShotFrame
         screenshot={this.screenshot}
         selections={this.selections}
+        offline={this.props.offline}
         doc={this.doc}
         onSave={this.updateScreenShot}
       />

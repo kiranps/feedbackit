@@ -9,7 +9,7 @@ class ScreenShotFrame extends Component {
   }
 
   render() {
-    const { doc, screenshot, selections, onSave } = this.props;
+    const { doc, screenshot, offline, selections, onSave } = this.props;
 
     return (
       <Frame
@@ -29,6 +29,7 @@ class ScreenShotFrame extends Component {
             <ScreenShotEditor
               document={document}
               screenshot={screenshot}
+              offline={offline}
               selections={selections}
               onSave={onSave}
             />
