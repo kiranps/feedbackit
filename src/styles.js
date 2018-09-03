@@ -140,7 +140,7 @@ const ScreenShotBox = styled.div`
 
 const ScreenShot = styled.img`
   height: 192px;
-  min-width: 10px;
+  max-width: 320px;
   margin: 0 auto;
   border: none;
   position: absolute;

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import ScreenShotTool from "./ScreenShotTool";
+import React, { Component } from "react";
+import ScreenShotFrame from "./ScreenShotFrame";
 import { cloneDocument, unloadScrollBars, puppeterScreenshot } from "./helper";
 import FeedBack from "./FeedBack";
 import absolutify from "absolutify";
@@ -48,7 +48,7 @@ class App extends Component {
     const { isScreenShotToolOpened } = this.state;
 
     return isScreenShotToolOpened ? (
-      <ScreenShotTool
+      <ScreenShotFrame
         screenshot={this.screenshot}
         doc={this.doc}
         onSave={this.updateScreenShot}

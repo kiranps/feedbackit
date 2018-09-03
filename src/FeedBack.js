@@ -17,6 +17,10 @@ export default class FeedBack extends Component {
     this.state = { include_screenshot: true };
   }
 
+  componentDidMount = () => {
+    document.body.style.cursor = "default";
+  };
+
   handleAttachScreenShot = () => {
     this.setState({ include_screenshot: !this.state.include_screenshot });
   };

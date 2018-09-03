@@ -3,19 +3,14 @@ import Close from "./Close";
 import Canvas from "./Canvas";
 import { BugFrontLauncher, Done } from "./Comp";
 import { Drag, Select, Hide } from "./Icons";
-import Frame, { FrameContextConsumer } from "react-frame-component";
 import {
   domRectToStyle,
   isInside,
-  cloneDocument,
-  unloadScrollBars,
   takeScreenShotOfIframe,
-  mergeScreenShotWithSelections,
-  puppeterScreenshot
+  mergeScreenShotWithSelections
 } from "./helper";
-import absolutify from "absolutify";
 
-class ScreenShotTool extends Component {
+class ScreenShotToolEditor extends Component {
   constructor(props) {
     super(props);
     const windowHeight = window.innerHeight;
@@ -37,19 +32,26 @@ class ScreenShotTool extends Component {
     this.selection = false;
   }
 
-  handleSelect = ele => {
-    ele.addEventListener("mousemove", this.mouseMove, false);
-    ele.addEventListener("click", this.handleSelectionMode, false);
+  componentDidMount = () => {
+    this.handleSelect(this.props.document);
+    this.props.document.body.style.cursor = "crosshair";
+  };
+
+  handleSelect = () => {
+    const node = this.props.document;
+    node.addEventListener("mousemove", this.mouseMove, false);
+    node.addEventListener("click", this.handleSelectionMode, false);
   };
 
   handleHide = () => {};
 
-  handleDone = ele => {
-    ele.removeEventListener("mousemove", this.mouseMove, false);
-    ele.removeEventListener("click", this.handleSelectionMode, false);
+  handleDone = () => {
+    const node = this.props.document;
+    node.removeEventListener("mousemove", this.mouseMove, false);
+    node.removeEventListener("click", this.handleSelectionMode, false);
 
     if (this.props.offline) {
-      takeScreenShotOfIframe(ele.body).then(data => this.props.onSave(data));
+      takeScreenShotOfIframe(node.body).then(data => this.props.onSave(data));
     } else {
       mergeScreenShotWithSelections(
         this.props.screenshot,
@@ -100,55 +102,36 @@ class ScreenShotTool extends Component {
 
   render() {
     const { hoverElementStyle, selections, activeBoxes } = this.state;
-    const { doc } = this.props;
 
     return (
-      <Frame
-        initialContent={doc}
-        frameBorder="none"
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%"
-        }}
-        mountTarget="#root"
-      >
-        <FrameContextConsumer>
-          {// Callback is invoked with iframe's window and document instances
-          ({ document }) => (
-            <Fragment>
-              <Canvas
-                selections={selections}
-                hoveredNode={hoverElementStyle}
-                height={this.height}
-                width={this.width}
-              />
-              {activeBoxes.map((x, i) => (
-                <Close
-                  key={i}
-                  top={x.y - 12}
-                  left={x.x + x.width - 12}
-                  onClick={() => this.handleDelete(x.key)}
-                />
-              ))}
-              <BugFrontLauncher>
-                <Drag />
-                <Select onClick={() => this.handleSelect(document)} />
-                <Hide onClick={() => this.handleHide()} />
-                <Done onClick={() => this.handleDone(document)} />
-              </BugFrontLauncher>
-            </Fragment>
-          )}
-        </FrameContextConsumer>
-      </Frame>
+      <Fragment>
+        <Canvas
+          selections={selections}
+          hoveredNode={hoverElementStyle}
+          height={this.height}
+          width={this.width}
+        />
+        {activeBoxes.map((x, i) => (
+          <Close
+            key={i}
+            top={x.y - 12}
+            left={x.x + x.width - 12}
+            onClick={() => this.handleDelete(x.key)}
+          />
+        ))}
+        <BugFrontLauncher>
+          <Drag />
+          <Select onClick={this.handleSelect} />
+          <Hide onClick={this.handleHide} />
+          <Done onClick={this.handleDone} />
+        </BugFrontLauncher>
+      </Fragment>
     );
   }
 }
 
-export default ScreenShotTool;
+export default ScreenShotToolEditor;
 
-ScreenShotTool.defaultProps = {
+ScreenShotToolEditor.defaultProps = {
   offline: false
 };
