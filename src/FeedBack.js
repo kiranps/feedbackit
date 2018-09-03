@@ -11,6 +11,8 @@ import {
   Cancel
 } from "./styles";
 
+import { reloadScrollBars } from "./helper";
+
 export default class FeedBack extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +25,11 @@ export default class FeedBack extends Component {
 
   handleAttachScreenShot = () => {
     this.setState({ include_screenshot: !this.state.include_screenshot });
+  };
+
+  handleCancel = () => {
+    window.screenCapture.close();
+    reloadScrollBars();
   };
 
   render() {
@@ -49,7 +56,7 @@ export default class FeedBack extends Component {
         </LegalMessage>
         <Footer>
           <Save />
-          <Cancel />
+          <Cancel onClick={this.handleCancel} />
         </Footer>
       </FeedBackBox>
     );

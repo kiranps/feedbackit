@@ -65,7 +65,6 @@ const Button = styled.button`
   border-color: transparent;
   border-radius: 2px;
   box-sizing: border-box;
-  cursor: pointer;
   font-size: 14px;
   font-family: sans-serif;
   height: 36px;
@@ -77,10 +76,15 @@ const Button = styled.button`
 
   &:hover {
     background-color: rgb(238, 238, 238);
+    cursor: pointer;
   }
 
   &:active {
     background-color: rgb(189, 189, 189);
+  }
+
+  &:focus {
+    outline: 0;
   }
 `;
 

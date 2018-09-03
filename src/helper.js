@@ -41,7 +41,7 @@ export const cloneDocument = () => {
   return newDocument;
 };
 
-const reloadScrollBars = () => {
+export const reloadScrollBars = () => {
   document.documentElement.style.overflow = "auto"; // firefox, chrome
   document.body.scroll = "yes"; // ie only
 };
