@@ -25,7 +25,7 @@ class ScreenShotToolEditor extends Component {
       isFeedBackBoxOpen: false,
       selectionMode: false,
       startMousePosition: null,
-      selections: [],
+      selections: this.props.selections || [],
       activeBoxes: []
     };
 
@@ -47,19 +47,14 @@ class ScreenShotToolEditor extends Component {
 
   handleDone = () => {
     const node = this.props.document;
+    const { selections } = this.state;
     node.removeEventListener("mousemove", this.mouseMove, false);
     node.removeEventListener("click", this.handleSelectionMode, false);
-
-    if (this.props.offline) {
-      takeScreenShotOfIframe(node.body).then(data => this.props.onSave(data));
-    } else {
-      mergeScreenShotWithSelections(
-        this.props.screenshot,
-        this.state.selections
-      ).then(data => {
-        this.props.onSave(data);
-      });
-    }
+    const data = mergeScreenShotWithSelections(
+      this.props.screenshot,
+      this.state.selections
+    );
+    this.props.onSave({ screenshot: data, selections });
   };
 
   handleSelectionMode = () => {

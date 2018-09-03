@@ -97,24 +97,21 @@ function drawRect(rect, ctx) {
   ctx.save();
 }
 
-export const mergeScreenShotWithSelections = (screenshot, selections) =>
-  convertBlobtoImage(screenshot).then(img => {
-    const finalCanvas = combineCanvas(
-      drawImageOnCanvas(img),
-      drawSelectionsOnCanvas(img.width, img.height, selections)
-    );
-    console.log(finalCanvas);
-    return finalCanvas.toDataURL();
-  });
+export const mergeScreenShotWithSelections = (img, selections) => {
+  const finalCanvas = combineCanvas(
+    drawImageOnCanvas(img),
+    drawSelectionsOnCanvas(img.width, img.height, selections)
+  );
+  return finalCanvas.toDataURL();
+};
 
 export function convertBlobtoImage(file) {
   return new Promise(function(resolved, rejected) {
     var img = new Image();
     img.onload = function() {
       resolved(img);
-      URL.revokeObjectURL(this.src);
     };
-    img.src = file;
+    img.src = URL.createObjectURL(file);
   });
 }
 

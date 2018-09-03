@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import ScreenShotFrame from "./ScreenShotFrame";
-import { cloneDocument, unloadScrollBars, puppeterScreenshot } from "./helper";
+import {
+  cloneDocument,
+  unloadScrollBars,
+  puppeterScreenshot,
+  convertBlobtoImage
+} from "./helper";
 import FeedBack from "./FeedBack";
 import absolutify from "absolutify";
 
@@ -14,6 +19,8 @@ class App extends Component {
     this.height = windowHeight > documentHeight ? windowHeight : documentHeight;
     this.width = documentWidth;
     this.screenshot = null;
+    this.editedScreenshot = null;
+    this.selections = [];
     this.state = { isScreenShotToolOpened: false, screenshotFlag: false };
     this.doc = cloneDocument();
   }
@@ -27,10 +34,12 @@ class App extends Component {
       width: this.width
     };
 
-    puppeterScreenshot(data).then(data => {
-      this.screenshot = URL.createObjectURL(data);
-      this.setState({ screenshotFlag: true });
-    });
+    puppeterScreenshot(data)
+      .then(convertBlobtoImage)
+      .then(data => {
+        this.screenshot = data;
+        this.setState({ screenshotFlag: true });
+      });
 
     unloadScrollBars();
   };
@@ -40,21 +49,28 @@ class App extends Component {
   };
 
   updateScreenShot = data => {
-    this.screenshot = data;
+    this.editedScreenShot = data.screenshot;
+    this.selections = data.selections;
     this.setState({ isScreenShotToolOpened: false });
   };
 
   render() {
     const { isScreenShotToolOpened } = this.state;
+    const screenshot = this.editedScreenShot
+      ? this.editedScreenShot
+      : this.screenshot
+        ? this.screenshot.src
+        : this.screenshot;
 
     return isScreenShotToolOpened ? (
       <ScreenShotFrame
         screenshot={this.screenshot}
+        selections={this.selections}
         doc={this.doc}
         onSave={this.updateScreenShot}
       />
     ) : (
-      <FeedBack screenshot={this.screenshot} editScreenShot={this.handleEdit} />
+      <FeedBack screenshot={screenshot} editScreenShot={this.handleEdit} />
     );
   }
 }
