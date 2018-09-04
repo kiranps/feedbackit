@@ -24,8 +24,8 @@ const Spinner = styled.div`
   transform: translateZ(0);
   animation: ${rotate360} 1.1s infinite linear;
   border-radius: 50%;
-  width: 13px;
-  height: 13px;
+  width: 24px;
+  height: 24px;
 
   &:after {
     border-radius: 50%;
