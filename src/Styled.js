@@ -16,7 +16,7 @@ export const Overlay = styled.div`
 
 export const Modal = styled.div`
   width: 360px;
-  margin: 41px auto 0;
+  margin: 30px auto 0;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.14) 0px 24px 38px 3px,
     rgba(0, 0, 0, 0.12) 0px 9px 46px 8px, rgba(0, 0, 0, 0.2) 0px 11px 15px -7px;
@@ -184,3 +184,21 @@ export const ScreenShotPreview = ({ image, onClick }) => (
     )}
   </ScreenShotBox>
 );
+
+export const FeedbackLauncher = styled.div.attrs({
+  children: "Send Feedback"
+})`
+  position: fixed;
+  height: 30px;
+  bottom: 0;
+  right: 5px;
+  font-size: 13px;
+  user-select: none;
+  font-family: sans-serif;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #f3f3f2;
+  border-radius: 2px 2px 0 0;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: rgba(0, 0, 0, 0.54);
+`;

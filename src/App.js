@@ -76,7 +76,11 @@ class App extends Component {
         onSave={this.updateScreenShot}
       />
     ) : (
-      <FeedBack screenshot={screenshot} editScreenShot={this.handleEdit} />
+      <FeedBack
+        screenshot={screenshot}
+        editScreenShot={this.handleEdit}
+        onClose={this.props.onClose}
+      />
     );
   }
 }

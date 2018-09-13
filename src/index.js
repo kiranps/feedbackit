@@ -2,51 +2,43 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
-import { inherits } from "util";
+import { FeedbackLauncher } from "./Styled";
 
-window.screenCapture = (function() {
-  function attachFeebackLauncher() {
-    const feedback = document.createElement("div");
-    feedback.innerHTML = "Send Feedback";
-    feedback.setAttribute("data-html2canvas-ignore", "true");
-    feedback.style = `
-    position: fixed;
-    height: 30px;
-    bottom: 0;
-    right: 5px;
-    font-size: 13px;
-    user-select: none;
-    font-family: sans-serif;
-    padding: 5px;
-    cursor: pointer;
-    background-color: #f3f3f2;
-    border-radius: 2px 2px 0 0;
-    border: 1px solid rgba(27,31,35,0.2);
-    color: rgba(0,0,0,.54); 
-  `;
-    console.log(feedback);
-    feedback.addEventListener("click", window.screenCapture.launch, false);
-    document.body.appendChild(feedback);
-  }
+class FeedbackLib {
+  mountFeebackLauncher = () => {
+    this.launcher = document.createElement("div");
+    document.body.appendChild(this.launcher);
+    ReactDOM.render(
+      <FeedbackLauncher
+        onClick={this.mountScreenShotTool}
+        data-html2canvas-ignore
+      />,
+      this.launcher
+    );
+  };
 
-  function renderApp({ offline }) {
-    const div = document.createElement("div");
-    div.id = "screenshotlib";
-    div.setAttribute("data-html2canvas-ignore", "true");
-    document.body.appendChild(div);
-    ReactDOM.render(<App offline={offline} />, div);
-  }
+  mountScreenShotTool = () => {
+    this.screenshotTool = document.createElement("div");
+    this.screenshotTool.id = "screenshotlib";
+    this.screenshotTool.setAttribute("data-html2canvas-ignore", "true");
+    document.body.appendChild(this.screenshotTool);
+    ReactDOM.render(
+      <App offline={this.offline} onClose={this.close} />,
+      this.screenshotTool
+    );
+  };
 
-  function init({ launcher }) {
+  close = () => {
+    ReactDOM.unmountComponentAtNode(this.screenshotTool);
+  };
+
+  init(props) {
+    const { offline, launcher } = props || { offline: true, launcher: true };
+    this.offline = offline || false;
     if (launcher) {
-      attachFeebackLauncher();
+      this.mountFeebackLauncher();
     }
   }
+}
 
-  return {
-    mount: props => init(props),
-    launch: props => renderApp(props),
-    close: () =>
-      ReactDOM.unmountComponentAtNode(document.getElementById("screenshotlib"))
-  };
-})();
+window.screenCapture = new FeedbackLib();

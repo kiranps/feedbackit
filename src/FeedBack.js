@@ -9,7 +9,7 @@ import {
   Footer,
   Save,
   Cancel
-} from "./styles";
+} from "./Styled";
 
 import { reloadScrollBars } from "./helper";
 
@@ -28,7 +28,7 @@ export default class FeedBack extends Component {
   };
 
   handleCancel = () => {
-    window.screenCapture.close();
+    this.props.onClose();
     reloadScrollBars();
   };
 
