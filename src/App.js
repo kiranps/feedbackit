@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import ScreenShotFrame from "./ScreenShotFrame";
 import {
   cloneDocument,
@@ -67,20 +67,23 @@ class App extends Component {
         ? this.screenshot.src
         : this.screenshot;
 
-    return isScreenShotToolOpened ? (
-      <ScreenShotFrame
-        screenshot={this.screenshot}
-        selections={this.selections}
-        offline={this.props.offline}
-        doc={this.doc}
-        onSave={this.updateScreenShot}
-      />
-    ) : (
-      <FeedBack
-        screenshot={screenshot}
-        editScreenShot={this.handleEdit}
-        onClose={this.props.onClose}
-      />
+    return (
+      <Fragment>
+        <ScreenShotFrame
+          visibility={isScreenShotToolOpened}
+          screenshot={this.screenshot}
+          selections={this.selections}
+          offline={this.props.offline}
+          doc={this.doc}
+          onSave={this.updateScreenShot}
+        />
+        <FeedBack
+          visibility={!isScreenShotToolOpened}
+          screenshot={screenshot}
+          editScreenShot={this.handleEdit}
+          onClose={this.props.onClose}
+        />
+      </Fragment>
     );
   }
 }

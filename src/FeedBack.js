@@ -16,7 +16,7 @@ import { reloadScrollBars } from "./helper";
 export default class FeedBack extends Component {
   constructor(props) {
     super(props);
-    this.state = { include_screenshot: true };
+    this.state = { include_screenshot: true, feedback: null };
   }
 
   componentDidMount = () => {
@@ -32,14 +32,27 @@ export default class FeedBack extends Component {
     reloadScrollBars();
   };
 
+  handleTextResponse = e => {
+    console.log(e.target.value);
+    this.setState({ feedback: e.target.value });
+  };
+
+  handleSubmit = () => {
+    console.log(this.state.feedback);
+    console.log(this.props.screenshot);
+  };
+
   render() {
     const { include_screenshot } = this.state;
-    const { screenshot, editScreenShot } = this.props;
+    const { screenshot, editScreenShot, visibility } = this.props;
 
     return (
-      <FeedBackBox>
+      <FeedBackBox visibility={visibility}>
         <Header>Send Feedback</Header>
-        <TextArea placeholder="Describe you issues or share ideas" />
+        <TextArea
+          placeholder="Describe you issues or share ideas"
+          onChange={this.handleTextResponse}
+        />
         <AttachScreenShot
           value={include_screenshot}
           onChange={this.handleAttachScreenShot}
@@ -55,7 +68,7 @@ export default class FeedBack extends Component {
           of Service.
         </LegalMessage>
         <Footer>
-          <Save />
+          <Save onClick={this.handleSubmit} />
           <Cancel onClick={this.handleCancel} />
         </Footer>
       </FeedBackBox>

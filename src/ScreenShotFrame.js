@@ -9,7 +9,14 @@ class ScreenShotFrame extends Component {
   }
 
   render() {
-    const { doc, screenshot, offline, selections, onSave } = this.props;
+    const {
+      doc,
+      screenshot,
+      offline,
+      selections,
+      onSave,
+      visibility
+    } = this.props;
 
     return (
       <Frame
@@ -19,8 +26,8 @@ class ScreenShotFrame extends Component {
           position: "fixed",
           top: 0,
           left: 0,
-          width: "100%",
-          height: "100%",
+          width: visibility ? "100%" : "0",
+          height: visibility ? "100%" : "0",
           zIndex: "99999999999999"
         }}
         mountTarget="#screenshotlib"
