@@ -37,6 +37,12 @@ class ScreenShotToolEditor extends Component {
     this.props.document.body.style.cursor = "crosshair";
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.someValue !== prevState.someValue) {
+      return { someState: nextProps.someValue };
+    } else return null;
+  }
+
   handleSelect = () => {
     const node = this.props.document;
     node.addEventListener("mousemove", this.mouseMove, false);
@@ -51,17 +57,13 @@ class ScreenShotToolEditor extends Component {
     node.removeEventListener("mousemove", this.mouseMove, false);
     node.removeEventListener("click", this.handleSelectionMode, false);
 
-    if (this.props.offline) {
-      takeScreenShotOfIframe(node.body).then(img => {
-        this.props.onSave({ screenshot: img.src, selections });
-      });
-    } else {
-      const data = mergeScreenShotWithSelections(
-        this.props.screenshot,
-        this.state.selections
-      );
-      this.props.onSave({ screenshot: data, selections });
-    }
+    const data = mergeScreenShotWithSelections(
+      this.props.screenshot,
+      this.state.selections
+    );
+
+    this.props.onSave({ screenshot: data, selections });
+    this.props.document.body.style.cursor = "default";
   };
 
   handleSelectionMode = () => {

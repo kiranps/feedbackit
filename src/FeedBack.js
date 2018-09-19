@@ -33,7 +33,6 @@ export default class FeedBack extends Component {
   };
 
   handleTextResponse = e => {
-    console.log(e.target.value);
     this.setState({ feedback: e.target.value });
   };
 
@@ -43,11 +42,12 @@ export default class FeedBack extends Component {
   };
 
   render() {
+    console.log("render FeedBack");
     const { include_screenshot } = this.state;
-    const { screenshot, editScreenShot, visibility } = this.props;
+    const { screenshot, editScreenShot, visible } = this.props;
 
     return (
-      <FeedBackBox visibility={visibility}>
+      <FeedBackBox visible={visible}>
         <Header>Send Feedback</Header>
         <TextArea
           placeholder="Describe you issues or share ideas"

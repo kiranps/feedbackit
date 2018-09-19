@@ -11,7 +11,7 @@ export const Overlay = styled.div`
   left: 0;
   background-color: rgba(255, 255, 255, 0.8);
   overflow: hidden;
-  visibility: ${props => (props.visibility ? "visible" : "hidden")};
+  visibility: ${props => (props.visible ? "visible" : "hidden")};
   z-index: 5;
 `;
 
@@ -23,8 +23,8 @@ export const Modal = styled.div`
     rgba(0, 0, 0, 0.12) 0px 9px 46px 8px, rgba(0, 0, 0, 0.2) 0px 11px 15px -7px;
 `;
 
-export const FeedBackBox = ({ children, visibility }) => (
-  <Overlay visibility={visibility}>
+export const FeedBackBox = ({ children, visible }) => (
+  <Overlay visible={visible}>
     <Modal children={children} />
   </Overlay>
 );

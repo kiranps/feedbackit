@@ -54,7 +54,8 @@ class App extends Component {
   };
 
   updateScreenShot = data => {
-    this.editedScreenShot = data.screenshot;
+    const { screenshot } = data;
+    this.editedScreenShot = screenshot;
     this.selections = data.selections;
     this.setState({ isScreenShotToolOpened: false });
   };
@@ -70,7 +71,7 @@ class App extends Component {
     return (
       <Fragment>
         <ScreenShotFrame
-          visibility={isScreenShotToolOpened}
+          visible={isScreenShotToolOpened}
           screenshot={this.screenshot}
           selections={this.selections}
           offline={this.props.offline}
@@ -78,7 +79,7 @@ class App extends Component {
           onSave={this.updateScreenShot}
         />
         <FeedBack
-          visibility={!isScreenShotToolOpened}
+          visible={!isScreenShotToolOpened}
           screenshot={screenshot}
           editScreenShot={this.handleEdit}
           onClose={this.props.onClose}
