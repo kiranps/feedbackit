@@ -188,6 +188,7 @@ export const ScreenShotPreview = ({ image, onClick }) => (
 
 export const FeedbackLauncher = styled.div`
   position: fixed;
+  box-sizing: border-box;
   height: 30px;
   bottom: 0;
   right: 5px;
