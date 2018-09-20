@@ -186,9 +186,7 @@ export const ScreenShotPreview = ({ image, onClick }) => (
   </ScreenShotBox>
 );
 
-export const FeedbackLauncher = styled.div.attrs({
-  children: "Send Feedback"
-})`
+export const FeedbackLauncher = styled.div`
   position: fixed;
   height: 30px;
   bottom: 0;

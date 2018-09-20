@@ -12,7 +12,9 @@ class FeedbackLib {
       <FeedbackLauncher
         onClick={this.mountScreenShotTool}
         data-html2canvas-ignore
-      />,
+      >
+        Send Feedback
+      </FeedbackLauncher>,
       this.launcher
     );
   };
@@ -41,4 +43,4 @@ class FeedbackLib {
   }
 }
 
-window.screenCapture = new FeedbackLib();
+export default new FeedbackLib();

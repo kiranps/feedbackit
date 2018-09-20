@@ -9,6 +9,11 @@
 # production
 /build
 
+/umd
+/demo/dist
+/lib
+/es
+
 # misc
 .DS_Store
 .env.local
