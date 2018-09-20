@@ -147,3 +147,17 @@ export const puppeterScreenshot = data =>
 
 export const takeScreenShotOfIframe = ele =>
   html2canvas(ele).then(canvasToImage);
+
+const convertStyleSheetToCss = doc => {
+  let docStyle = "";
+  const styleSheetCount = doc.styleSheets.length;
+  const styleSheets = doc.styleSheets;
+  for (i = 0; i < styleSheetCount; i++) {
+    let cssRules = styleSheets[i].rules;
+    let cssRulesLength = cssRules.length;
+    for (j = 0; j < cssRulesLength; j++) {
+      docStyle += cssRules[j].cssText;
+    }
+  }
+  return doc;
+};
