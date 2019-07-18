@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React from "react";
 import Close from "./Close";
 import Canvas from "./Canvas";
 import { BugFrontLauncher, Done } from "./Comp";
@@ -10,7 +10,7 @@ import {
   mergeScreenShotWithSelections
 } from "./helper";
 
-class ScreenShotToolEditor extends Component {
+class ScreenShotToolEditor extends React.Component {
   constructor(props) {
     super(props);
     const windowHeight = window.innerHeight;
@@ -108,7 +108,7 @@ class ScreenShotToolEditor extends Component {
     const { hoverElementStyle, selections, activeBoxes } = this.state;
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Canvas
           selections={selections}
           hoveredNode={hoverElementStyle}
@@ -129,7 +129,7 @@ class ScreenShotToolEditor extends Component {
           <Hide onClick={this.handleHide} />
           <Done onClick={this.handleDone} />
         </BugFrontLauncher>
-      </Fragment>
+      </React.Fragment>
     );
   }
 }

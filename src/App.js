@@ -25,7 +25,7 @@ class App extends Component {
     this.doc = cloneDocument();
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     const origin = window.location.origin;
     const page = absolutify(this.doc, origin);
     const data = {
@@ -47,7 +47,7 @@ class App extends Component {
     }
 
     unloadScrollBars();
-  };
+  }
 
   handleEdit = () => {
     this.setState({ isScreenShotToolOpened: true });
@@ -65,8 +65,8 @@ class App extends Component {
     const screenshot = this.editedScreenShot
       ? this.editedScreenShot
       : this.screenshot
-        ? this.screenshot.src
-        : this.screenshot;
+      ? this.screenshot.src
+      : this.screenshot;
 
     return (
       <Fragment>

@@ -1,34 +1,28 @@
 {
-  "name": "feedbackit",
+  "name": "feedbacklib",
   "version": "1.0.0",
   "description": "this tool allows users to give visual feedback of your website",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
   "scripts": {
-    "text": "echo 'hello world'"
+    "start": "parcel start example/index.html",
+    "build": "parcel build src/feedbacklib.js -d dist"
   },
   "dependencies": {
     "absolutify": "^0.1.0",
-    "html2canvas": "^1.0.0-alpha.12",
-    "react-frame-component": "^4.0.1",
-    "styled-components": "^3.4.9"
-  },
-  "peerDependencies": {
-    "react": "16.x"
+    "babel-loader": "^8.0.6",
+    "html2canvas": "^1.0.0-rc.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-frame-component": "^4.1.0",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.12.3"
   },
   "author": "",
-  "homepage": "",
   "license": "MIT",
-  "repository": "",
-  "keywords": [
-    "react-component"
-  ]
+  "repository": ""
 }

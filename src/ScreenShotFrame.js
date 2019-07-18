@@ -1,14 +1,15 @@
-import React, { Component } from "react";
+import React from "react";
 import Frame, { FrameContextConsumer } from "react-frame-component";
 import ScreenShotEditor from "./ScreenShotEditor";
 
-class ScreenShotFrame extends Component {
+class ScreenShotFrame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
+    console.log("screenShotFrame");
     const {
       doc,
       screenshot,

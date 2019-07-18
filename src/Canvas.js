@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 const styles = {
   canvas: {
@@ -10,7 +10,7 @@ const styles = {
   }
 };
 
-export default class Canvas extends Component {
+export default class Canvas extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
