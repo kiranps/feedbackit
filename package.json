@@ -17,10 +17,12 @@
   "devDependencies": {
     "nwb": "^0.23.0"
   },
-  "main": "lib/feedbackit.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
   "files": [
     "umd",
-    "lib"
+    "lib",
+    "es"
   ],
   "author": "",
   "license": "MIT",
