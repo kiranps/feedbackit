@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { FeedbackLauncher } from "./Styled";
 
-function feedbacklib() {
+export const init = (function() {
   let launcher;
   let screenshotTool;
   let isOffline = true;
@@ -43,8 +43,5 @@ function feedbacklib() {
     }
   }
 
-  return { init };
-}
-
-window.feedbacklib = feedbacklib();
-window.feedbacklib.init();
+  return init;
+})();

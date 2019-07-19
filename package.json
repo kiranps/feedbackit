@@ -1,14 +1,15 @@
 {
-  "name": "feedbacklib",
+  "name": "feedbackit",
   "version": "1.0.0",
   "description": "this tool allows users to give visual feedback of your website",
   "scripts": {
-    "start": "parcel start example/index.html",
-    "build": "parcel build src/feedbacklib.js -d dist"
+    "start": "parcel start example/index.html --global feedbackit",
+    "build": "yarn build:umd && yarn build:commonjs",
+    "build:umd": "parcel build src/feedbackit.js -d umd --out-file feedbackit.umd.js  --global feedbackit",
+    "build:commonjs": "parcel build src/feedbackit.js -d lib --out-file feedbackit.js  --target node --bundle-node-modules"
   },
   "dependencies": {
     "absolutify": "^0.1.0",
-    "babel-loader": "^8.0.6",
     "html2canvas": "^1.0.0-rc.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -17,11 +18,17 @@
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
+    "babel-loader": "^8.0.6",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.12.3"
   },
+  "main": "lib/feedbackit.js",
+  "files": [
+    "umd",
+    "lib"
+  ],
   "author": "",
   "license": "MIT",
   "repository": ""
