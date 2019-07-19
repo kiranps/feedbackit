@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { FeedbackLauncher } from "./Styled";
 
+const feedback = {};
+
 export const init = (function() {
   let launcher;
   let screenshotTool;
@@ -45,3 +47,7 @@ export const init = (function() {
 
   return init;
 })();
+
+feedback.init = init;
+
+export default feedback;
