@@ -10,6 +10,7 @@ export const init = (function() {
   let launcher;
   let screenshotTool;
   let isOffline = true;
+  let handleSave = () => console.log("hi");
 
   function mountFeebackLauncher() {
     launcher = document.createElement("div");
@@ -28,7 +29,7 @@ export const init = (function() {
     screenshotTool.setAttribute("data-html2canvas-ignore", "true");
     document.body.appendChild(screenshotTool);
     ReactDOM.render(
-      <App offline={isOffline} onClose={close} />,
+      <App offline={isOffline} onClose={close} onSave={handleSave} />,
       screenshotTool
     );
   }
@@ -37,10 +38,18 @@ export const init = (function() {
     ReactDOM.unmountComponentAtNode(screenshotTool);
   }
 
-  function init(props) {
-    const { offline, launcher } = props || { offline: true, launcher: true };
-    isOffline = offline || false;
-    if (launcher) {
+  function init({ offline, launcher, onSave }) {
+    const showLauncher = launcher === undefined ? true : launcher;
+    handleSave =
+      onSave === undefined
+        ? close
+        : function() {
+            close();
+            onSave.apply(this, arguments);
+          };
+    isOffline = offline === undefined ? true : offline;
+
+    if (showLauncher) {
       mountFeebackLauncher();
     }
   }

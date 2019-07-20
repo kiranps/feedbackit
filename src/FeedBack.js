@@ -37,12 +37,11 @@ export default class FeedBack extends Component {
   };
 
   handleSubmit = () => {
-    console.log(this.state.feedback);
-    console.log(this.props.screenshot);
+    // console.log(this.state.feedback);
+    this.props.onSave(this.props.screenshot);
   };
 
   render() {
-    console.log("render FeedBack");
     const { include_screenshot } = this.state;
     const { screenshot, editScreenShot, visible } = this.props;
 

@@ -6,5 +6,10 @@ module.exports = {
       global: "feedbackit",
       externals: {}
     }
+  },
+  webpack: {
+    html: {
+      template: "demo/src/index.html"
+    }
   }
 };

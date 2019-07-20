@@ -83,6 +83,7 @@ class App extends Component {
           screenshot={screenshot}
           editScreenShot={this.handleEdit}
           onClose={this.props.onClose}
+          onSave={this.props.onSave}
         />
       </Fragment>
     );

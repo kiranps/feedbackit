@@ -9,7 +9,6 @@ class ScreenShotFrame extends React.Component {
   }
 
   render() {
-    console.log("screenShotFrame");
     const {
       doc,
       screenshot,

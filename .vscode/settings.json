@@ -1,5 +1,4 @@
 {
   "editor.formatOnSave": true,
-  "editor.wordWrapColumn": 120,
-  "reason.codelens.enabled": true
+  "editor.wordWrapColumn": 120
 }
