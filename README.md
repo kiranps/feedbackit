@@ -4,7 +4,7 @@ library to take visual feedback of website
 
 ### Demo
 
-click here (https://feedbackit.now.sh)[https://feedbackit.now.sh]
+[click here](https://feedbackit.now.sh)
 
 ### Installing
 
