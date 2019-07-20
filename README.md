@@ -1,4 +1,5 @@
 # feedbackit
+
 library to take visual feedback of website
 
 ### Installing
@@ -18,9 +19,9 @@ Using cdn:
 ### Usage
 
 ```js
-feedbackit(props).then(function(imageBlob) {
-  // handle image
-});
+feedbackit.init(); // initialize feedback too;
+feedbackit.save(data => console.log(data)); // handle save
+feedbackit.launch(); // launch feedback modal
 ```
 
 ## Contributing
