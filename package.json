@@ -1,6 +1,6 @@
 {
   "name": "feedbackit",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "this tool allows users to give visual feedback of your website",
   "scripts": {
     "start": "nwb serve",
