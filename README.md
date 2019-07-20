@@ -1,0 +1,34 @@
+# feedbackit
+library to take visual feedback of website
+
+### Installing
+
+Using npm:
+
+```
+npm install feedbackit
+```
+
+Using cdn:
+
+```html
+<script src="https://unpkg.com/feedbackit/umd/feedbackit.js"></script>
+```
+
+### Usage
+
+```js
+feedbackit(props).then(function(imageBlob) {
+  // handle image
+});
+```
+
+## Contributing
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+- [html2canvas](https://github.com/niklasvh/html2canvas)
