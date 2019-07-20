@@ -4,28 +4,29 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { FeedbackLauncher } from "./Styled";
 
-const feedback = {};
-
-export const init = (function() {
+const feedback = (function() {
   let launcher;
   let screenshotTool;
   let isOffline = true;
-  let handleSave = () => console.log("hi");
+  let handleSave = () => {
+    console.log("handle save method before calling launch");
+    close;
+  };
 
   function mountFeebackLauncher() {
     launcher = document.createElement("div");
     document.body.appendChild(launcher);
     ReactDOM.render(
-      <FeedbackLauncher onClick={mountScreenShotTool} data-html2canvas-ignore>
+      <FeedbackLauncher onClick={launch} data-html2canvas-ignore>
         Send Feedback
       </FeedbackLauncher>,
       launcher
     );
   }
 
-  function mountScreenShotTool() {
+  function launch() {
     screenshotTool = document.createElement("div");
-    screenshotTool.id = "screenshotlib";
+    screenshotTool.id = "screenshotit";
     screenshotTool.setAttribute("data-html2canvas-ignore", "true");
     document.body.appendChild(screenshotTool);
     ReactDOM.render(
@@ -38,25 +39,23 @@ export const init = (function() {
     ReactDOM.unmountComponentAtNode(screenshotTool);
   }
 
-  function init({ offline, launcher, onSave }) {
-    const showLauncher = launcher === undefined ? true : launcher;
-    handleSave =
-      onSave === undefined
-        ? close
-        : function() {
-            close();
-            onSave.apply(this, arguments);
-          };
-    isOffline = offline === undefined ? true : offline;
+  function init(props) {
+    const feedbackProps = { launcher: false, offline: true, ...props };
+    isOffline = feedbackProps.offline;
 
-    if (showLauncher) {
+    if (feedbackProps.launcher) {
       mountFeebackLauncher();
     }
   }
 
-  return init;
-})();
+  function save(cb) {
+    handleSave = function() {
+      cb.apply(this, arguments);
+      close();
+    };
+  }
 
-feedback.init = init;
+  return { init, launch, save };
+})();
 
 export default feedback;

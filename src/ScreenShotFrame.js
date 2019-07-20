@@ -30,7 +30,7 @@ class ScreenShotFrame extends React.Component {
           height: visible ? "100%" : "0",
           zIndex: "99999999999999"
         }}
-        mountTarget="#screenshotlib"
+        mountTarget="#screenshotit"
       >
         <FrameContextConsumer>
           {({ document }) => (

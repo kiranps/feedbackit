@@ -37,8 +37,10 @@ export default class FeedBack extends Component {
   };
 
   handleSubmit = () => {
-    // console.log(this.state.feedback);
-    this.props.onSave(this.props.screenshot);
+    this.props.onSave({
+      message: this.state.feedback,
+      screenshot: this.props.screenshot
+    });
   };
 
   render() {
