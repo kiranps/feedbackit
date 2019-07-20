@@ -1,6 +1,6 @@
 {
   "name": "feedbackit",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "this tool allows users to give visual feedback of your website",
   "scripts": {
     "build": "nwb build-react-component",
